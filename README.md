@@ -1,3 +1,4 @@
+```sh
 #!/bin/bash
 # Name of script .. : mktorrent.sh
 # Date  ........... : 3-27-2017
@@ -45,3 +46,4 @@ mktorrent -p -l "$PIECE" -a "$TRACKER" -o "$TORRENTFILE".torrent "$TORRENT"
 # Variables     ...... : Not to be modified
 # TORRENTFILE ........ : Name of the .torrent, from the folder / target file
 # TAILLE     ......... : Size of rooms defined according to File/File (cf https://wiki.vuze.com/w/Torrent_Piece_Size)
+```
