@@ -11,43 +11,33 @@
 # Software   ...... : mktorrent
 # Execution  ...... : "sh mktorrent.sh directory/or/File.mp4"
 
+folder="$1"
+output="$folder.torrent"
+fsize="$(du -sm $1 | awk '{print $1}')"
+announce="https://tracker.com/announce" # Edit this
 
-# Variables ...... : To define here and not to modify the continuation of the script
-# TRACKER ........ : Tracker announce URL
+## Calculate folder/file size
+if [ "$fsize" -le 100 ];
+  then psize="19";
+elif [ "$fsize" -le 700 ];
+  then psize="20";
+elif [ "$fsize" -le 2000 ];
+  then psize="21";
+elif [ "$fsize" -le 5000 ];
+  then psize="22";
+elif [ "$fsize" -le 10000 ];
+  then psize="23";
+elif [ "$fsize" -le 30000 ];
+  then psize="24";
+elif [ "$fsize" -le 60000 ];
+  then psize="25";
+elif [ "$fsize" -le 100000 ];
+  then psize="26";
 
+else echo "Please split your files and create a torrent for each part separately" && exit 1;
+fi
 
-TRACKER="http://tracker.bittorrent.com:6969/announce"
+## Create .torrent
+mktorrent -v -p -l "$psize" -a "$announce" -o "$output" "$folder"
 
-TORRENTFILE=$(basename "$TORRENT")
-TAILLE=$(du -s "$TORRENT" | awk '{ print $TORRENT }')
-    if [ $TAILLE -lt 524288 ]; then
-        PIECE=18
-    elif [ $TAILLE -lt 1048576 ]; then
-        PIECE=19
-    elif [ $TAILLE -lt 2097152 ]; then
-        PIECE=20
-    elif [ $TAILLE -lt 4194304 ]; then
-        PIECE=21
-    elif [ $TAILLE -lt 8388608 ]; then
-        PIECE=22
-    elif [ $TAILLE -lt 16777216 ]; then
-        PIECE=23
-    elif [ $TAILLE -lt 33554432 ]; then
-        PIECE=24
-    else
-        PIECE=25
-    fi
-
-# Script ......... : NOT MODIFIED
-# -p . ........... : private (no DHT)
-# -l . ........... : length (size pieces)
-# -a . ........... : announce (URL tracker)
-# -o . ........... : output (Name of .torrent)
-# $1 . ........... : Folder/Target file
-
-mktorrent -p -l "$PIECE" -a "$TRACKER" -o "$TORRENTFILE".torrent "$TORRENT"
-
-# Variables     ...... : Not to be modified
-# TORRENTFILE ........ : Name of the .torrent, from the folder / target file
-# TAILLE     ......... : Size of rooms defined according to File/File (cf https://wiki.vuze.com/w/Torrent_Piece_Size)
 ```
